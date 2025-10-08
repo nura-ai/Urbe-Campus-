@@ -1,0 +1,137 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+
+contract PastaNFT is ERC721, ERC721URIStorage, Ownable {
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIdCounter;
+
+    // Struct to store pasta plate characteristics
+    struct PastaPlate {
+        string pastaType;
+        string pastaSauce;
+        uint256 createdAt;
+        address creator;
+    }
+
+    // Mapping from token ID to pasta plate details
+    mapping(uint256 => PastaPlate) public pastaPlates;
+
+    // Events
+    event PastaMinted(
+        uint256 indexed tokenId,
+        address indexed creator,
+        string pastaType,
+        string pastaSauce
+    );
+
+    constructor() ERC721("PastaNFT", "PASTA") Ownable(msg.sender) {}
+
+    /**
+     * @dev Mint a new pasta NFT
+     * @param pastaType The type of pasta (e.g., "Spaghetti", "Penne", "Fusilli")
+     * @param pastaSauce The type of sauce (e.g., "Carbonara", "Bolognese", "Pesto")
+     * @param tokenURI The metadata URI for the NFT (optional, can be empty string)
+     */
+    function mintPasta(
+        string memory pastaType,
+        string memory pastaSauce,
+        string memory tokenURI
+    ) public returns (uint256) {
+        require(bytes(pastaType).length > 0, "Pasta type cannot be empty");
+        require(bytes(pastaSauce).length > 0, "Pasta sauce cannot be empty");
+
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+
+        // Mint the NFT to the caller
+        _safeMint(msg.sender, tokenId);
+
+        // Set token URI if provided
+        if (bytes(tokenURI).length > 0) {
+            _setTokenURI(tokenId, tokenURI);
+        }
+
+        // Store pasta plate characteristics
+        pastaPlates[tokenId] = PastaPlate({
+            pastaType: pastaType,
+            pastaSauce: pastaSauce,
+            createdAt: block.timestamp,
+            creator: msg.sender
+        });
+
+        emit PastaMinted(tokenId, msg.sender, pastaType, pastaSauce);
+
+        return tokenId;
+    }
+
+    /**
+     * @dev Get pasta plate details by token ID
+     */
+    function getPastaPlate(uint256 tokenId)
+        public
+        view
+        returns (
+            string memory pastaType,
+            string memory pastaSauce,
+            uint256 createdAt,
+            address creator
+        )
+    {
+        require(_ownerOf(tokenId) != address(0), "Token does not exist");
+        PastaPlate memory plate = pastaPlates[tokenId];
+        return (plate.pastaType, plate.pastaSauce, plate.createdAt, plate.creator);
+    }
+
+    /**
+     * @dev Get all token IDs owned by an address
+     */
+    function getTokensByOwner(address owner)
+        public
+        view
+        returns (uint256[] memory)
+    {
+        uint256 tokenCount = balanceOf(owner);
+        uint256[] memory tokenIds = new uint256[](tokenCount);
+        uint256 index = 0;
+
+        for (uint256 i = 0; i < _tokenIdCounter.current(); i++) {
+            if (_ownerOf(i) == owner) {
+                tokenIds[index] = i;
+                index++;
+            }
+        }
+
+        return tokenIds;
+    }
+
+    /**
+     * @dev Get total number of minted NFTs
+     */
+    function totalSupply() public view returns (uint256) {
+        return _tokenIdCounter.current();
+    }
+
+    // Override required functions
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        override(ERC721, ERC721URIStorage)
+        returns (string memory)
+    {
+        return super.tokenURI(tokenId);
+    }
+
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721, ERC721URIStorage)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+}
