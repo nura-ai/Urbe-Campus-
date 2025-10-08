@@ -1,7 +1,7 @@
 {
   "name": "Diamond #4721",
   "description": "A victory token from the Diamond Collector game. Catch the exact number and claim your sparkle.",
-  "image": "https://github.com/nura-ai/Urbe-Campus-/blob/main/diamond4721.png",
+  "image": "https://raw.githubusercontent.com/nura-ai/Urbe-Campus-/refs/heads/main/diamond4721.png",
   "attributes": [
     {
       "trait_type": "Rarity",
