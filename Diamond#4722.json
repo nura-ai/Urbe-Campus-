@@ -1,0 +1,19 @@
+{
+  "name": "Diamond #4722",
+  "description": "A victory token from the Diamond Collector game. Trickster Spark — a playful burst of brilliance for those who win with style.",
+  "image": "https://yourdomain.com/images/diamond4722.png",
+  "attributes": [
+    {
+      "trait_type": "Rarity",
+      "value": "Legendary"
+    },
+    {
+      "trait_type": "Collected Diamonds",
+      "value": 6
+    },
+    {
+      "trait_type": "Vibration",
+      "value": "Trickster Spark"
+    }
+  ]
+}
