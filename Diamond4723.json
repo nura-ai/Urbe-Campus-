@@ -1,0 +1,19 @@
+{
+  "name": "Diamond #4723",
+  "description": "A victory token from the Diamond Collector game. Soft Victory — a gentle triumph that glows with quiet strength.",
+  "image": "https://yourdomain.com/images/diamond4723.png",
+  "attributes": [
+    {
+      "trait_type": "Rarity",
+      "value": "Rare"
+    },
+    {
+      "trait_type": "Collected Diamonds",
+      "value": 4
+    },
+    {
+      "trait_type": "Vibration",
+      "value": "Soft Victory"
+    }
+  ]
+}
